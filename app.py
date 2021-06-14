@@ -1,5 +1,8 @@
+from src.Game import Game
+
+
 def run():
-    pass
+    game = Game()
 
 if __name__ == "__main__":
     run()

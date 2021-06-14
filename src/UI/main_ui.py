@@ -235,18 +235,14 @@ class Ui_MainWindow(object):
         self.tablero_muestra.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
 
-    def add_square(self, x, y, player_number, color):
-        self.tablero_juego.setItem(x, y, QtWidgets.QTableWidgetItem(str(player_number)))
-        self.tablero_juego.item(x, y).setBackground(QtGui.QColor(color))
+    def add_square(self, row, column, player_number, color):        
+        self.tablero_juego.setItem(row, column, QtWidgets.QTableWidgetItem(str(player_number)))
+        self.tablero_juego.item(row, column).setBackground(QtGui.QColor(color))
+    
+    def add_model_square(self, row, column, color):        
+        self.tablero_muestra.setItem(row, column, QtWidgets.QTableWidgetItem("a"))
+        self.tablero_muestra.item(row, column).setBackground(QtGui.QColor(color))
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    ui.grid_espacio_juego(20,20)
-    ui.add_square(2,4,1,"blue")
-    MainWindow.show()
-    sys.exit(app.exec_())
+
+    

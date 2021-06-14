@@ -1,4 +1,4 @@
-from structures.LLNode import LLNode
+from ..structures.LLNode import LLNode
 
 
 class LinkedList:

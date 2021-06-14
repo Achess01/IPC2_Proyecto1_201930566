@@ -46,7 +46,7 @@ class SparseMatrix:
                                             
     def insertRow(self, rowNumber) -> MatrixNode:
         header = self.root.get_down()
-        row = MatrixNode(rowNumber, 0, Square(0))
+        row = MatrixNode(0, rowNumber, Square(0))
         if header == None:
             # Agrega la nueva fila a la derecha del root
             self.root.set_down(row)
@@ -102,8 +102,8 @@ class SparseMatrix:
             return self.insertColumn(columnNumber)
         return None
     
-    def insert(self, x, y, player_number):
-        newNode = MatrixNode(x, y, Square(player_number))
+    def insert(self, column, row, player_number):
+        newNode = MatrixNode(column, row, Square(player_number))
         x = newNode.x
         y = newNode.y
 
@@ -173,7 +173,7 @@ class SparseMatrix:
 
     def search_node(self, row, column) -> MatrixNode:
         rowHead = self.getRow(row, False)
-        if rowHead != None:
+        if rowHead != None:            
             tmp = rowHead.get_right()
             while tmp != None:
                 if tmp.x == column:
@@ -181,6 +181,15 @@ class SparseMatrix:
                 tmp = tmp.get_right()    
         return None 
 
+    def show_matrix(self):
+        aux = self.root                              
+        aux = aux.get_down()        
+        while aux != None:              
+            aux2 = aux.get_right()
+            while(aux2 != None):                
+                print(aux2.x, aux2.y)
+                aux2 = aux2.get_right()            
+            aux = aux.get_down()        
 
 
                 
