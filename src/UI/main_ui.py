@@ -10,8 +10,21 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from ..Game import Game
+from ..structures.LinkedList import LinkedList
+from .Color import Color
+
 
 class Ui_MainWindow(object):
+
+    colors = LinkedList()
+    colors.add(Color("Azul", "#00F"))
+    colors.add(Color("Rojo", "#F00"))
+    colors.add(Color("Amarillo", "##FFE800"))
+    colors.add(Color("Verde", "#0F0"))
+    playing = False    
+    
+    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(909, 551)
@@ -131,7 +144,7 @@ class Ui_MainWindow(object):
         self.text_filas = QtWidgets.QSpinBox(self.config_juego)
         self.text_filas.setMinimum(5)
         self.text_filas.setMaximum(99)
-        self.text_filas.setProperty("value", 5)
+        self.text_filas.setProperty("value", 10)
         self.text_filas.setObjectName("text_filas")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.text_filas)
         self.label_4 = QtWidgets.QLabel(self.config_juego)
@@ -140,7 +153,7 @@ class Ui_MainWindow(object):
         self.text_cols = QtWidgets.QSpinBox(self.config_juego)
         self.text_cols.setMinimum(5)
         self.text_cols.setMaximum(99)
-        self.text_cols.setProperty("value", 5)
+        self.text_cols.setProperty("value", 10)
         self.text_cols.setObjectName("text_cols")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.text_cols)
         self.label_5 = QtWidgets.QLabel(self.config_juego)
@@ -183,6 +196,12 @@ class Ui_MainWindow(object):
         self.menuJuego.addAction(self.actionAyuda)
         self.menuBar.addAction(self.menuJuego.menuAction())
 
+        self.text_piezas.setValidator(QtGui.QIntValidator())
+        self.text_x.setValidator(QtGui.QIntValidator())
+        self.text_x.setMaxLength(3)
+        self.text_y.setValidator(QtGui.QIntValidator())
+        self.text_y.setMaxLength(3)
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -216,8 +235,8 @@ class Ui_MainWindow(object):
         self.actionAbrir_partida.setText(_translate("MainWindow", "Abrir partida"))
         self.actionGuardar_partida.setText(_translate("MainWindow", "Guardar partida"))
         self.actionAyuda.setText(_translate("MainWindow", "Ayuda"))
-    
-    def grid_espacio_juego(self, rows, columns):
+        
+    def grid_game_board(self, rows, columns):
         self.tablero_muestra.setRowCount(4)
         self.tablero_muestra.setColumnCount(4)    
         self.tablero_juego.setRowCount(rows)
@@ -234,14 +253,60 @@ class Ui_MainWindow(object):
         self.tablero_muestra.verticalHeader().setMinimumSectionSize(25)
         self.tablero_muestra.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
-
     def add_square(self, row, column, player_number, color):        
         self.tablero_juego.setItem(row, column, QtWidgets.QTableWidgetItem(str(player_number)))
         self.tablero_juego.item(row, column).setBackground(QtGui.QColor(color))
     
     def add_model_square(self, row, column, color):        
-        self.tablero_muestra.setItem(row, column, QtWidgets.QTableWidgetItem("a"))
-        self.tablero_muestra.item(row, column).setBackground(QtGui.QColor(color))
+        self.tablero_muestra.setItem(row, column, QtWidgets.QTableWidgetItem("-"))
+        self.tablero_muestra.item(row, column).setBackground(QtGui.QColor(color))  
+
+    def get_color(self, color) -> str:
+        for i in range(Ui_MainWindow.colors.length):
+            node = Ui_MainWindow.colors.get_node(i + 1)
+            if node != None:
+                aux_color = node.data
+                if color == aux_color.name:
+                    return aux_color.code
+        return "#FFF"
+                
+    def new_game(self):
+        color_j1 = self.color_jugador1.currentText()
+        color_j2 = self.color_jugador2.currentText()
+        time = self.text_tiempo.value()
+        columns = self.text_cols.value()
+        rows = self.text_filas.value()
+        n_pieces = self.text_piezas.text()
+        if color_j1 != color_j2 and len(n_pieces) > 0:
+            n_pieces = int(n_pieces)
+            color_j1 = self.get_color(color_j1)
+            color_j1 = self.get_color(color_j2)
+            self.game = Game(color_j1, color_j2)
+            self.grid_game_board(rows, columns)
+            Ui_MainWindow.playing = True
+            self.config_juego.setEnabled(False)
+            self.controles_juego.setEnabled(True)
+        else:            
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setIcon(QtWidgets.QMessageBox.Information)
+            msgBox.setText("Datos incorrectos\nRecuerde:\n1. Los colores de los jugadores deben ser diferentes\n2. Debe especificar una cantidad de piezas")
+            msgBox.setWindowTitle("Error")
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            msgBox.exec()            
+            
+        
+
+        
+    def add_actions(self):
+        self.button_iniciar.clicked.connect(lambda : self.new_game())
+    
+    def start(self):  
+        self.add_actions()
+        self.controles_juego.setEnabled(False)
+        self.game = None                
+        #self.grid_espacio_juego(20,20)
+        #self.game.add_model(self) # esto va en cuando ya se esté jugando
+     
 
 
 

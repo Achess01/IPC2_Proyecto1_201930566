@@ -4,16 +4,18 @@ from ..structures.LLNode import LLNode
 class LinkedList:
     def __init__(self):
         self.head = None
+        self.length = 0
     
     def add(self, data):
         newNode = LLNode(data)
         if self.head == None:
-            self.head = newNode
+            self.head = newNode            
         else:
             aux = self.head
             while(aux.get_next() != None):
                 aux = aux.get_next()
             aux.set_next(newNode)
+        self.length += 1
     
     def get_node(self, index) -> LLNode:
         if self.head != None:

@@ -1,4 +1,4 @@
-from .UI.main_ui import Ui_MainWindow
+from .Player import Player
 from .structures.LinkedList import LinkedList
 from .structures.SparseMatrix import SparseMatrix
 from PyQt5 import QtWidgets
@@ -65,21 +65,16 @@ class Game:
     figure6.insert(1,3,1)
     figure6.insert(1,4,1)    
     figures_list.add(figure6)   
+           
+    def __init__(self, color_j1, color_j2):        
+        self.players = LinkedList()
+        self.players.add(Player(1,color_j1))
+        self.players.add(Player(2,color_j2))
+        self.board = SparseMatrix()      
+        print("Game created")
+          
     
-    
-    def __init__(self):        
-        import sys
-        app = QtWidgets.QApplication(sys.argv)
-        MainWindow = QtWidgets.QMainWindow()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(MainWindow)
-        self.ui.grid_espacio_juego(20,20)
-        self.ui.add_square(1,1,1,"blue")
-        self.add_model()
-        MainWindow.show()
-        sys.exit(app.exec_())
-    
-    def add_model(self) -> SparseMatrix:        
+    def add_model(self, ui) -> SparseMatrix:        
         ran = random.randint(1, Game.CANTIDAD_FIGURAS)
         node = Game.figures_list.get_node(ran)                
         for i in range(node.data.rows):
@@ -88,7 +83,7 @@ class Game:
                 column = j + 1
                 square = node.data.search_node(row, column)                                 
                 if square != None:                    
-                    self.ui.add_model_square(i, j, "blue")
+                    ui.add_model_square(i, j, "#00F")
         return node
 
 
