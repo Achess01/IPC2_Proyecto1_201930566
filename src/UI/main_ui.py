@@ -20,7 +20,7 @@ class Ui_MainWindow(object):
     colors = LinkedList()
     colors.add(Color("Azul", "#00F"))
     colors.add(Color("Rojo", "#F00"))
-    colors.add(Color("Amarillo", "##FFE800"))
+    colors.add(Color("Amarillo", "#FFE800"))
     colors.add(Color("Verde", "#0F0"))
     playing = False    
     
@@ -261,9 +261,9 @@ class Ui_MainWindow(object):
         self.tablero_muestra.setItem(row, column, QtWidgets.QTableWidgetItem("-"))
         self.tablero_muestra.item(row, column).setBackground(QtGui.QColor(color))  
 
-    def get_color(self, color) -> str:
+    def get_color(self, color) -> str:        
         for i in range(Ui_MainWindow.colors.length):
-            node = Ui_MainWindow.colors.get_node(i + 1)
+            node = Ui_MainWindow.colors.get_node(i + 1)            
             if node != None:
                 aux_color = node.data
                 if color == aux_color.name:
@@ -277,12 +277,15 @@ class Ui_MainWindow(object):
         columns = self.text_cols.value()
         rows = self.text_filas.value()
         n_pieces = self.text_piezas.text()
-        if color_j1 != color_j2 and len(n_pieces) > 0:
+        if color_j1 != color_j2:
+            if len(n_pieces) == 0:
+                n_pieces = "1000"
             n_pieces = int(n_pieces)
             color_j1 = self.get_color(color_j1)
-            color_j1 = self.get_color(color_j2)
-            self.game = Game(color_j1, color_j2)
+            color_j2 = self.get_color(color_j2)
+            print(color_j1, color_j2)
             self.grid_game_board(rows, columns)
+            self.game = Game(color_j1, color_j2, n_pieces, self)            
             Ui_MainWindow.playing = True
             self.config_juego.setEnabled(False)
             self.controles_juego.setEnabled(True)

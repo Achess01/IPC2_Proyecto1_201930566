@@ -66,15 +66,28 @@ class Game:
     figure6.insert(1,4,1)    
     figures_list.add(figure6)   
            
-    def __init__(self, color_j1, color_j2):        
+    def __init__(self, color_j1, color_j2, n_pieces, ui):
+        self.ui = ui
         self.players = LinkedList()
-        self.players.add(Player(1,color_j1))
-        self.players.add(Player(2,color_j2))
-        self.board = SparseMatrix()      
-        print("Game created")
+        self.players.add(Player(1,color_j1, n_pieces))
+        self.players.add(Player(2,color_j2, n_pieces))
+        self.board = SparseMatrix()              
+        self.initial_turn()
+        self.add_model()
+        
+    
+    def initial_turn(self):
+        ran = random.randint(1,2)
+        self.turn = self.players.get_node(ran)
+
+    def change_turn(self):
+        self.turn = self.turn.get_next()
+        if self.turn == None:
+            self.turn = self.players.get_node(1)
           
     
-    def add_model(self, ui) -> SparseMatrix:        
+    def add_model(self) -> SparseMatrix:        
+        color = self.turn.data.color
         ran = random.randint(1, Game.CANTIDAD_FIGURAS)
         node = Game.figures_list.get_node(ran)                
         for i in range(node.data.rows):
@@ -83,7 +96,7 @@ class Game:
                 column = j + 1
                 square = node.data.search_node(row, column)                                 
                 if square != None:                    
-                    ui.add_model_square(i, j, "#00F")
+                    self.ui.add_model_square(i, j, color)
         return node
 
 
