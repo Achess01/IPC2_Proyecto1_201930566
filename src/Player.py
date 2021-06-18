@@ -8,10 +8,10 @@ class Player:
     def calc_points():
         pass
 
-    def minus_chache(self):
+    def minus_chance(self):
         self.chance = self.chance - 1;
         if self.chance > 0:
-            return self.chance()
+            return self.chance
         else: 
             self.chance = 2
             return 0

@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(909, 551)
+        MainWindow.resize(1000, 600)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../../../../Downloads/python.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -235,7 +235,15 @@ class Ui_MainWindow(object):
         self.actionAbrir_partida.setText(_translate("MainWindow", "Abrir partida"))
         self.actionGuardar_partida.setText(_translate("MainWindow", "Guardar partida"))
         self.actionAyuda.setText(_translate("MainWindow", "Ayuda"))
-        
+
+    def show_info(self, text):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setText(text)
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.exec()    
+
     def grid_game_board(self, rows, columns):
         self.tablero_muestra.setRowCount(4)
         self.tablero_muestra.setColumnCount(4)    
@@ -274,8 +282,8 @@ class Ui_MainWindow(object):
         color_j1 = self.color_jugador1.currentText()
         color_j2 = self.color_jugador2.currentText()
         time = self.text_tiempo.value()
-        columns = self.text_cols.value()
-        rows = self.text_filas.value()
+        self.columns = self.text_cols.value()
+        self.rows = self.text_filas.value()
         n_pieces = self.text_piezas.text()
         if color_j1 != color_j2:
             if len(n_pieces) == 0:
@@ -284,24 +292,35 @@ class Ui_MainWindow(object):
             color_j1 = self.get_color(color_j1)
             color_j2 = self.get_color(color_j2)
             print(color_j1, color_j2)
-            self.grid_game_board(rows, columns)
-            self.game = Game(color_j1, color_j2, n_pieces, self)            
+            self.grid_game_board(self.rows, self.columns)
+            self.game = Game(self.rows, self.columns, color_j1, color_j2, n_pieces, self)            
             Ui_MainWindow.playing = True
             self.config_juego.setEnabled(False)
             self.controles_juego.setEnabled(True)
         else:            
-            msgBox = QtWidgets.QMessageBox()
-            msgBox.setIcon(QtWidgets.QMessageBox.Information)
-            msgBox.setText("Datos incorrectos\nRecuerde:\n1. Los colores de los jugadores deben ser diferentes\n2. Debe especificar una cantidad de piezas")
-            msgBox.setWindowTitle("Error")
-            msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            msgBox.exec()            
-            
-        
+            self.show_info("Datos incorrectos\nRecuerde:\n1. Los colores de los jugadores deben ser diferentes")
+                    
+    def put_figures(self):
+        try:
+            row = int(self.text_y.text())
+            column = int(self.text_x.text())                   
+            if row > 0 and column > 0 and row <= self.rows and column <= self.columns:
+                self.game.move(row, column)
+            else:
+                self.game.player_chance()
+            self.text_x.clear()
+            self.text_y.clear()
+        except ValueError:
+            self.show_info("Ingrese valores válidos")
+            print(ValueError)
 
-        
+    def end_turn(self):
+        self.game.change_turn()
+
     def add_actions(self):
-        self.button_iniciar.clicked.connect(lambda : self.new_game())
+        self.button_iniciar.clicked.connect(lambda: self.new_game())
+        self.button_colocar.clicked.connect(lambda: self.put_figures())
+        self.button_turno.clicked.connect(lambda: self.end_turn())
     
     def start(self):  
         self.add_actions()
@@ -314,3 +333,4 @@ class Ui_MainWindow(object):
 
 
     
+

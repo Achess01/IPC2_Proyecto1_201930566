@@ -2,101 +2,140 @@ from .Player import Player
 from .structures.LinkedList import LinkedList
 from .structures.SparseMatrix import SparseMatrix
 from PyQt5 import QtWidgets
+from .Figure import Figure
 import random
 
 
 class Game:
-    CANTIDAD_FIGURAS = 6    
+    CANTIDAD_FIGURAS = 6
     figures_list = LinkedList()
-    # Definiendo figura 1 "L"    
-    figure1 = SparseMatrix()
-    figure1.insert(1,1,1)
+    # Definiendo figura 1 "L"
+
+    figure1 = Figure(SparseMatrix(), 1,1)
+    figure1.figure.insert(1,1,1)
     #figure1.insert(2,1,-1)
-    figure1.insert(1,2,1)
+    figure1.figure.insert(1,2,1)
     #figure1.insert(2,2,-1)
-    figure1.insert(1,3,1)
+    figure1.figure.insert(1,3,1)
     #figure1.insert(2,3,-1)
-    figure1.insert(1,4,1)
-    figure1.insert(2,4,1)
+    figure1.figure.insert(1,4,1)
+    figure1.figure.insert(2,4,1)
     figures_list.add(figure1)
-    # Definiendo figura 2 "L" invertida    
-    figure2 = SparseMatrix()
+    # Definiendo figura 2 "L" invertida
+    figure2 = Figure(SparseMatrix(), 2,1)
     #figure2.insert(1,1,-1)
-    figure2.insert(2,1,1)
-    #figure2.insert(1,2,-1)
-    figure2.insert(2,2,1)
-    #figure2.insert(1,3,-1)
-    figure2.insert(2,3,1)
-    figure2.insert(1,4,1)
-    figure2.insert(2,4,1)
+    figure2.figure.insert(2,1,1)
+    #figure2.figure.insert(1,2,-1)
+    figure2.figure.insert(2,2,1)
+    #figure2.figure.insert(1,3,-1)
+    figure2.figure.insert(2,3,1)
+    figure2.figure.insert(1,4,1)
+    figure2.figure.insert(2,4,1)
     figures_list.add(figure2)
-    # Definiendo figura 3 "4 cuadros horizontales"    
-    figure3 = SparseMatrix()
-    figure3.insert(1,1,1)
-    figure3.insert(2,1,1)
-    figure3.insert(3,1,1)
-    figure3.insert(4,1,1)    
+    # Definiendo figura 3 "4 cuadros horizontales"
+    figure3 = Figure(SparseMatrix(), 1,1)
+    figure3.figure.insert(1,1,1)
+    figure3.figure.insert(2,1,1)
+    figure3.figure.insert(3,1,1)
+    figure3.figure.insert(4,1,1)
     figures_list.add(figure3)
-    # Definiendo figura 4 "Cuadrado 2x2"    
-    figure4 = SparseMatrix()
-    figure4.insert(1,1,1)
-    figure4.insert(2,1,1)
-    figure4.insert(1,2,1)
-    figure4.insert(2,2,1)    
+    # Definiendo figura 4 "Cuadrado 2x2"
+    figure4 = Figure(SparseMatrix(), 1,1)
+    figure4.figure.insert(1,1,1)
+    figure4.figure.insert(2,1,1)
+    figure4.figure.insert(1,2,1)
+    figure4.figure.insert(2,2,1)
     figures_list.add(figure4)
-    #Definiendo figura 5 "Pieza formada por cuatro posiciones 
+    #Definiendo figura 5 "Pieza formada por cuatro posiciones
     #formando una línea horizontal y, sobre esas
     #cuatro posiciones, dos cuadros formando una línea horizontal a manera de simular
-    #una pirámide."    
-    figure5 = SparseMatrix()
-    #figure5.insert(1,1,-1)
-    figure5.insert(2,1,1)
-    figure5.insert(3,1,1)
-    #figure5.insert(4,1,-1)
-    figure5.insert(1,2,1)
-    figure5.insert(2,2,1)
-    figure5.insert(3,2,1)
-    figure5.insert(4,2,1)
+    #una pirámide."
+    figure5 = Figure(SparseMatrix(), 2,1)
+    #figure5.figure.insert(1,1,-1)
+    figure5.figure.insert(2,1,1)
+    figure5.figure.insert(3,1,1)
+    #figure5.figure.insert(4,1,-1)
+    figure5.figure.insert(1,2,1)
+    figure5.figure.insert(2,2,1)
+    figure5.figure.insert(3,2,1)
+    figure5.figure.insert(4,2,1)
     figures_list.add(figure5)
-     # Definiendo figura 4 "4 cuadros verticales"    
-    figure6 = SparseMatrix()
-    figure6.insert(1,1,1)
-    figure6.insert(1,2,1)
-    figure6.insert(1,3,1)
-    figure6.insert(1,4,1)    
-    figures_list.add(figure6)   
-           
-    def __init__(self, color_j1, color_j2, n_pieces, ui):
+     # Definiendo figura 6 "4 cuadros verticales"
+    figure6 = Figure(SparseMatrix(), 1,1)
+    figure6.figure.insert(1,1,1)
+    figure6.figure.insert(1,2,1)
+    figure6.figure.insert(1,3,1)
+    figure6.figure.insert(1,4,1)
+    figures_list.add(figure6)
+
+    def __init__(self,rows, columns, color_j1, color_j2, n_pieces, ui):
         self.ui = ui
         self.players = LinkedList()
         self.players.add(Player(1,color_j1, n_pieces))
         self.players.add(Player(2,color_j2, n_pieces))
-        self.board = SparseMatrix()              
+        self.board = SparseMatrix()
+        self.board.set_max(rows, columns)
         self.initial_turn()
-        self.add_model()
-        
-    
+        self.actual_figure = self.add_model()
+
+    def player_chance(self):
+        n = self.turn.data.minus_chance()
+        self.ui.show_info("Casilla inválida\nOportunidades restantes: " + str(n))
+        if n < 1:
+            self.change_turn()
+
     def initial_turn(self):
         ran = random.randint(1,2)
         self.turn = self.players.get_node(ran)
 
     def change_turn(self):
+        self.turn.data.chance = 2
         self.turn = self.turn.get_next()
         if self.turn == None:
             self.turn = self.players.get_node(1)
-          
-    
-    def add_model(self) -> SparseMatrix:        
+        self.actual_figure = self.add_model()
+
+    def move(self, row, column):
+        self.make_move(row, column)        
+        #print(self.turn.data.color)
+
+    def make_move(self, row, column):
+        if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):
+            self.add_to_board(column, row)
+            self.change_turn()
+        else:
+            self.player_chance()
+            self.ui.show_info("No se puede insertar en esa casilla")
+
+    def add_model(self) -> Figure:
+        self.ui.tablero_muestra.clear()
         color = self.turn.data.color
         ran = random.randint(1, Game.CANTIDAD_FIGURAS)
-        node = Game.figures_list.get_node(ran)                
-        for i in range(node.data.rows):
-            for j in range(node.data.columns):                
+        figure = Game.figures_list.get_node(ran).data
+        node = figure.figure
+        for i in range(node.rows):
+            for j in range(node.columns):
                 row = i + 1
                 column = j + 1
-                square = node.data.search_node(row, column)                                 
-                if square != None:                    
+                square = node.search_node(row, column)
+                if square != None:
                     self.ui.add_model_square(i, j, color)
-        return node
-
+        return figure
+    
+    def add_to_board(self, x, y):        
+        translate_x = x - self.actual_figure.inicio_x
+        translate_y = y - self.actual_figure.inicio_y
+        color = self.turn.data.color 
+        number = self.turn.data.number        
+        aux = self.actual_figure.figure.root
+        aux = aux.get_down()
+        while aux != None:
+            aux2 = aux.get_right()
+            while aux2 != None:
+                column = aux2.x + translate_x
+                row = aux2.y + translate_y
+                self.ui.add_square(row - 1, column - 1, number, color)   
+                self.board.insert(column, row, number)
+                aux2 = aux2.get_right()
+            aux = aux.get_down()
 

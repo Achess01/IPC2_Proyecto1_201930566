@@ -7,6 +7,10 @@ class SparseMatrix:
         self.root = MatrixNode(0,0, Square(0))
         self.rows = 0
         self.columns = 0
+    
+    def set_max(self, max_rows, max_columns):
+        self.max_rows = max_rows
+        self.max_columns = max_columns
 
     def insertColumn(self, columnNumber) -> MatrixNode:
         header = self.root.get_right()
@@ -181,15 +185,43 @@ class SparseMatrix:
                 tmp = tmp.get_right()    
         return None 
 
-    def show_matrix(self):
-        aux = self.root                              
-        aux = aux.get_down()        
-        while aux != None:              
-            aux2 = aux.get_right()
-            while(aux2 != None):                
-                print(aux2.x, aux2.y)
-                aux2 = aux2.get_right()            
+    def is_insertable(self, row, column, player_number, figure):
+        if self.max_rows != None and self.max_columns != None:            
+            translate_x = column - figure.inicio_x
+            translate_y = row - figure.inicio_y 
+            aux = figure.figure.root                              
             aux = aux.get_down()        
+            while aux != None:              
+                aux2 = aux.get_right()
+                while aux2 != None:                                    
+                    x = aux2.x + translate_x
+                    y = aux2.y + translate_y
+                    if x > 0 and x <= self.max_columns and y > 0 and y <= self.max_rows:
+                        print(x,y)                        
+                        square = self.search_node(y, x)
+                        left = self.search_node(y, x - 1)
+                        right = self.search_node(y, x + 1)
+                        up = self.search_node(y - 1, x)
+                        down = self.search_node(y + 1, x)
+                        if square != None:
+                            return False
+                        if left != None:
+                            if left.square.player_number == player_number:
+                                return False
+                        if right != None:
+                            if right.square.player_number == player_number:
+                                return False
+                        if up != None:
+                            if up.square.player_number == player_number:
+                                return False
+                        if down != None:
+                            if down.square.player_number == player_number:
+                                return False
+                    else:
+                        return False
+                    aux2 = aux2.get_right()
+                aux = aux.get_down()        
+        return True
 
 
                 
