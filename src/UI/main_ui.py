@@ -66,6 +66,8 @@ class Ui_MainWindow(object):
         self.tablero_muestra.setColumnCount(0)
         self.tablero_muestra.setRowCount(0)
         self.gridLayout_3.addWidget(self.tablero_muestra, 0, 0, 1, 1)
+        self.gridLayout_3.setColumnStretch(0, 3)
+        self.gridLayout_3.setColumnStretch(1, 2)
         self.gridLayout_4.addWidget(self.frame_puntos_figura, 1, 2, 1, 1)
         self.controles_juego = QtWidgets.QGroupBox(self.centralwidget)
         self.controles_juego.setObjectName("controles_juego")
@@ -173,7 +175,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.config_juego, 1, 0, 1, 1)
         self.gridLayout_4.setColumnStretch(0, 1)
         self.gridLayout_4.setColumnStretch(1, 1)
-        self.gridLayout_4.setColumnStretch(2, 1)
+        self.gridLayout_4.setColumnStretch(2, 2)
         self.gridLayout_4.setRowStretch(0, 3)
         self.gridLayout_4.setRowStretch(1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -324,7 +326,7 @@ class Ui_MainWindow(object):
     
     def start(self):  
         self.add_actions()
-        self.controles_juego.setEnabled(False)
+        self.controles_juego.setEnabled(False)        
         self.game = None                
         #self.grid_espacio_juego(20,20)
         #self.game.add_model(self) # esto va en cuando ya se esté jugando

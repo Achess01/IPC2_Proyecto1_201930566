@@ -4,9 +4,17 @@ class Player:
         self.color = color
         self.n_pieces = n_pieces
         self.chance = 2
+        self.points = 0
     
-    def calc_points():
+    def calc_points(self):
         pass
+    
+    def add_point(self):
+        self.points += 1
+        
+    def discount(self):
+        self.n_pieces = self.n_pieces - 1
+        return self.n_pieces
 
     def minus_chance(self):
         self.chance = self.chance - 1;

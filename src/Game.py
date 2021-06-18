@@ -98,10 +98,21 @@ class Game:
     def move(self, row, column):
         self.make_move(row, column)        
         #print(self.turn.data.color)
+    def discount_piece(self):
+        return self.turn.data.discount()
+    
+    def show_info_player(self):
+        pieces = self.discount_piece()     
+        points = self.turn.data.points       
+        if self.turn.data.number == 1:
+            self.ui.puntos_j1.setText("J1: " + str(points) + "pts.\n" + str(pieces) + " restantes")
+        else:
+            self.ui.puntos_j2.setText("J2: " + str(points) + "pts.\n" + str(pieces) + " restantes")
 
     def make_move(self, row, column):
-        if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):
+        if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):            
             self.add_to_board(column, row)
+            self.show_info_player()
             self.change_turn()
         else:
             self.player_chance()
@@ -136,6 +147,7 @@ class Game:
                 row = aux2.y + translate_y
                 self.ui.add_square(row - 1, column - 1, number, color)   
                 self.board.insert(column, row, number)
+                self.turn.data.add_point()
                 aux2 = aux2.get_right()
             aux = aux.get_down()
 
