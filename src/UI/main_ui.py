@@ -316,6 +316,11 @@ class Ui_MainWindow(object):
             self.show_info("Ingrese valores válidos")
             print(ValueError)
 
+    def end_game(self):
+        if not self.game.draw:
+            self.show_info("El ganador es J" + str(self.game.winner.number))
+        else:
+            self.show_info("Empate")
     def end_turn(self):
         self.game.change_turn()
 

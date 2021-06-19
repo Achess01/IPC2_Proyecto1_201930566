@@ -77,6 +77,8 @@ class Game:
         self.board.set_max(rows, columns)
         self.initial_turn()
         self.actual_figure = self.add_model()
+        self.winner = None
+        self.draw = False
 
     def player_chance(self):
         n = self.turn.data.minus_chance()
@@ -88,16 +90,46 @@ class Game:
         ran = random.randint(1,2)
         self.turn = self.players.get_node(ran)
 
+    def set_winner(self):
+        #j1
+        j1 = self.players.get_node(1).data
+        #j2
+        j2 = self.players.get_node(2).data
+        if j1.points > j2.points:
+            self.winner = j1
+        elif j1.points < j2.points:
+            self.winner = j2
+        else:
+            self.draw = True
+
+    def is_playable(self):
+        rows = self.board.max_rows
+        columns = self.board.max_columns
+        player_number = self.turn.data.number        
+        for i in range(rows):
+            for j in range(columns):
+                square = self.board.search_node(i + 1, j + 1)
+                if square == None:
+                    if self.board.is_insertable(i+1, j+1, player_number, self.actual_figure):
+                        return True
+        return False
+
     def change_turn(self):
         self.turn.data.chance = 2
         self.turn = self.turn.get_next()
         if self.turn == None:
             self.turn = self.players.get_node(1)
         self.actual_figure = self.add_model()
+        if not self.is_playable():
+            self.set_winner()
+            self.ui.end_game()
+        
+    
 
     def move(self, row, column):
         self.make_move(row, column)        
         #print(self.turn.data.color)
+    
     def discount_piece(self):
         return self.turn.data.discount()
     
@@ -110,7 +142,7 @@ class Game:
             self.ui.puntos_j2.setText("J2: " + str(points) + "pts.\n" + str(pieces) + " restantes")
 
     def make_move(self, row, column):
-        if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):            
+        if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):
             self.add_to_board(column, row)
             self.show_info_player()
             self.change_turn()
