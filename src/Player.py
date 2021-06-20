@@ -1,7 +1,8 @@
 class Player:
-    def __init__(self, number, color, n_pieces):
+    def __init__(self, number, color, n_pieces, color_name):
         self.number = number
         self.color = color
+        self.color_name = color_name
         self.n_pieces = n_pieces
         self.chance = 2
         self.points = 0

@@ -68,11 +68,13 @@ class Game:
     figure6.figure.insert(1,4,1)
     figures_list.add(figure6)
 
-    def __init__(self,rows, columns, color_j1, color_j2, n_pieces, ui):
+    def __init__(self,rows, columns, color_code1, color_name1, color_code2, color_name2, n_pieces, ui, name):
+        self.name = name
         self.ui = ui
         self.players = LinkedList()
-        self.players.add(Player(1,color_j1, n_pieces))
-        self.players.add(Player(2,color_j2, n_pieces))
+        self.players.add(Player(1,color_code1, n_pieces, color_name1))
+        self.players.add(Player(2,color_code2, n_pieces, color_name2))
+        self.show_info_player()
         self.board = SparseMatrix()
         self.board.set_max(rows, columns)
         self.initial_turn()
@@ -123,9 +125,7 @@ class Game:
         if not self.is_playable():
             self.set_winner()
             self.ui.end_game()
-        
-    
-
+         
     def move(self, row, column):
         self.make_move(row, column)        
         #print(self.turn.data.color)
@@ -134,21 +134,20 @@ class Game:
         return self.turn.data.discount()
     
     def show_info_player(self):
-        pieces = self.discount_piece()     
-        points = self.turn.data.points       
-        if self.turn.data.number == 1:
-            self.ui.puntos_j1.setText("J1: " + str(points) + "pts.\n" + str(pieces) + " restantes")
-        else:
-            self.ui.puntos_j2.setText("J2: " + str(points) + "pts.\n" + str(pieces) + " restantes")
+        j1 = self.players.get_node(1).data
+        j2 = self.players.get_node(2).data                   
+        self.ui.puntos_j1.setText("J1: " + str(j1.points) + "pts.\n" + str(j1.n_pieces) + " piezas restantes")        
+        self.ui.puntos_j2.setText("J2: " + str(j2.points) + "pts.\n" + str(j2.n_pieces) + " piezas restantes")
 
     def make_move(self, row, column):
         if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):
             self.add_to_board(column, row)
+            self.discount_piece()
             self.show_info_player()
             self.change_turn()
         else:
             self.player_chance()
-            self.ui.show_info("No se puede insertar en esa casilla")
+            #self.ui.show_info("No se puede insertar en esa casilla")
 
     def add_model(self) -> Figure:
         self.ui.tablero_muestra.clear()
@@ -182,4 +181,5 @@ class Game:
                 self.turn.data.add_point()
                 aux2 = aux2.get_right()
             aux = aux.get_down()
+
 

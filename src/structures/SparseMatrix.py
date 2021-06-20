@@ -7,6 +7,8 @@ class SparseMatrix:
         self.root = MatrixNode(0,0, Square(0))
         self.rows = 0
         self.columns = 0
+        self.max_rows = 0
+        self.max_columns = 0
     
     def set_max(self, max_rows, max_columns):
         self.max_rows = max_rows
@@ -196,8 +198,7 @@ class SparseMatrix:
                 while aux2 != None:                                    
                     x = aux2.x + translate_x
                     y = aux2.y + translate_y
-                    if x > 0 and x <= self.max_columns and y > 0 and y <= self.max_rows:
-                        print(x,y)                        
+                    if x > 0 and x <= self.max_columns and y > 0 and y <= self.max_rows:                              
                         square = self.search_node(y, x)
                         left = self.search_node(y, x - 1)
                         right = self.search_node(y, x + 1)

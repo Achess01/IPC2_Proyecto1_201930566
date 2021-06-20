@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from ..Game import Game
 from ..structures.LinkedList import LinkedList
+from ..SaveGame import save_game, find_game
 from .Color import Color
 
 
@@ -204,6 +205,13 @@ class Ui_MainWindow(object):
         self.text_y.setValidator(QtGui.QIntValidator())
         self.text_y.setMaxLength(3)
 
+        #Nombre de la partida
+        self.text_game = QtWidgets.QLineEdit(self.config_juego)        
+        self.text_game.setObjectName("text_game")
+        self.text_game.setPlaceholderText("Nombre partida")
+        self.text_game.setMaxLength(14)
+        self.verticalLayout_3.addWidget(self.text_game)
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -238,17 +246,17 @@ class Ui_MainWindow(object):
         self.actionGuardar_partida.setText(_translate("MainWindow", "Guardar partida"))
         self.actionAyuda.setText(_translate("MainWindow", "Ayuda"))
 
-    def show_info(self, text):
+    def show_info(self, text, title = "Error"):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
         msgBox.setText(text)
-        msgBox.setWindowTitle("Error")
+        msgBox.setWindowTitle(title)
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msgBox.exec()    
 
-    def grid_game_board(self, rows, columns):
-        self.tablero_muestra.setRowCount(4)
-        self.tablero_muestra.setColumnCount(4)    
+    def grid_game_board(self, rows, columns):     
+        #Tablero de juego
+        self.tablero_juego.clear()   
         self.tablero_juego.setRowCount(rows)
         self.tablero_juego.setColumnCount(columns)          
         self.tablero_juego.horizontalHeader().setDefaultSectionSize(75)
@@ -257,6 +265,9 @@ class Ui_MainWindow(object):
         self.tablero_juego.verticalHeader().setMinimumSectionSize(50)
         self.tablero_juego.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         #Tablero muestra
+        self.tablero_muestra.clear()
+        self.tablero_muestra.setRowCount(4)
+        self.tablero_muestra.setColumnCount(4)    
         self.tablero_muestra.horizontalHeader().setDefaultSectionSize(50)
         self.tablero_muestra.horizontalHeader().setMinimumSectionSize(50)                
         self.tablero_muestra.verticalHeader().setDefaultSectionSize(25)
@@ -287,20 +298,26 @@ class Ui_MainWindow(object):
         self.columns = self.text_cols.value()
         self.rows = self.text_filas.value()
         n_pieces = self.text_piezas.text()
-        if color_j1 != color_j2:
-            if len(n_pieces) == 0:
-                n_pieces = "1000"
-            n_pieces = int(n_pieces)
-            color_j1 = self.get_color(color_j1)
-            color_j2 = self.get_color(color_j2)
-            print(color_j1, color_j2)
-            self.grid_game_board(self.rows, self.columns)
-            self.game = Game(self.rows, self.columns, color_j1, color_j2, n_pieces, self)            
-            Ui_MainWindow.playing = True
-            self.config_juego.setEnabled(False)
-            self.controles_juego.setEnabled(True)
-        else:            
-            self.show_info("Datos incorrectos\nRecuerde:\n1. Los colores de los jugadores deben ser diferentes")
+        name = self.text_game.text()
+        name = name.replace(" ", "")
+        if find_game(name) == None:
+            if color_j1 != color_j2 and len(name) >= 4:            
+                if len(n_pieces) == 0:
+                    n_pieces = "1000"            
+                n_pieces = int(n_pieces)
+                color_code1 = self.get_color(color_j1)
+                color_code2 = self.get_color(color_j2)            
+                self.puntos_j1.setStyleSheet("QLabel {color :"+ color_code1+ "; }");
+                self.puntos_j2.setStyleSheet("QLabel {color :"+ color_code2+ "; }");
+                self.grid_game_board(self.rows, self.columns)
+                self.game = Game(self.rows, self.columns, color_code1, color_j1, color_code2, color_j2, n_pieces, self, name)
+                Ui_MainWindow.playing = True
+                self.config_juego.setEnabled(False)
+                self.controles_juego.setEnabled(True)
+            else:            
+                self.show_info("Datos incorrectos\nRecuerde:\n1. Los colores de los jugadores deben ser diferentes\n2. Debe tener un nombre de partida (min 4, max 14 caracteres)")
+        else:
+            self.show_info("Ingrese un nombre diferente")
                     
     def put_figures(self):
         try:
@@ -316,11 +333,36 @@ class Ui_MainWindow(object):
             self.show_info("Ingrese valores válidos")
             print(ValueError)
 
-    def end_game(self):
-        if not self.game.draw:
-            self.show_info("El ganador es J" + str(self.game.winner.number))
+    def save_game(self):
+        if self.playing:
+            name = self.game.name
+            board = self.game.board
+            color1 = self.game.players.get_node(1).data.color_name
+            color2 = self.game.players.get_node(2).data.color_name
+            validate = save_game(name, board, color1, color2)
+            if(validate):
+                self.show_info("Partida guardada como " + name, "Completado")
+            else:
+                self.show_info("Error al guardar")
+
+    def end_game(self):        
+        if not self.game.draw:            
+            n = self.game.winner.number
+            self.show_info("El ganador es J" + str(n), "FELICIDADES")
+            if n == 1:
+                text = self.puntos_j1.text()
+                text = text + "\nGANADOR"
+                self.puntos_j1.setText(text)
+            else:
+                text = self.puntos_j2.text()
+                text = text + "\nGANADOR"
+                self.puntos_j2.setText(text)
         else:
             self.show_info("Empate")
+        self.playing = True
+        self.controles_juego.setEnabled(False)
+        self.config_juego.setEnabled(True)
+
     def end_turn(self):
         self.game.change_turn()
 
@@ -328,6 +370,7 @@ class Ui_MainWindow(object):
         self.button_iniciar.clicked.connect(lambda: self.new_game())
         self.button_colocar.clicked.connect(lambda: self.put_figures())
         self.button_turno.clicked.connect(lambda: self.end_turn())
+        self.actionGuardar_partida.triggered.connect(lambda: self.save_game())
     
     def start(self):  
         self.add_actions()
