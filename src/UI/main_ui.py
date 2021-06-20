@@ -359,7 +359,7 @@ class Ui_MainWindow(object):
                 self.puntos_j2.setText(text)
         else:
             self.show_info("Empate")
-        self.playing = True
+        self.playing = False
         self.controles_juego.setEnabled(False)
         self.config_juego.setEnabled(True)
 
