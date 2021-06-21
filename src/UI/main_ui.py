@@ -366,6 +366,7 @@ class Ui_MainWindow(object):
                     Ui_MainWindow.playing = True
                     self.config_juego.setEnabled(False)
                     self.controles_juego.setEnabled(True)
+                    self.playing = True
                 else:
                     self.show_info("No se puedo cargar la partida")
         else:

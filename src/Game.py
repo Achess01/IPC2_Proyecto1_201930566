@@ -3,7 +3,9 @@ from .structures.LinkedList import LinkedList
 from .structures.SparseMatrix import SparseMatrix
 from PyQt5 import QtWidgets
 from .Figure import Figure
+from .Moves import Moves
 import random
+from .SaveGame import new_report
 
 
 class Game:
@@ -80,6 +82,9 @@ class Game:
             self.board = board
             self.print_board()
             #funcion para contar puntos a jugadores
+        self.moves = LinkedList()    
+        self.n_moves = 1    
+        self.n_figure = 0
         self.show_info_player()
         self.board.set_max(rows, columns)
         self.initial_turn()
@@ -132,6 +137,7 @@ class Game:
             self.winner = j2
         else:
             self.draw = True
+        new_report(self.moves,j1.color, j2.color, self.winner, self.name)
 
     def is_playable(self):
         rows = self.board.max_rows
@@ -177,8 +183,14 @@ class Game:
         self.ui.puntos_j2.setText("J2: " + str(j2.points) + "pts.\n" + str(j2.n_pieces) + " piezas restantes")
 
     def make_move(self, row, column):
-        if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):
-            self.add_to_board(column, row)
+        message = ""
+        player_number =self.turn.data.number
+        figure = self.n_figure
+        if self.board.is_insertable(row, column, player_number, self.actual_figure):
+            self.add_to_board(column, row)            
+            message="Pieza insertada"
+            self.moves.add(Moves(self.n_moves,player_number,column,row, figure, message))
+            self.n_moves += 1
             if self.discount_piece() == 0:
                 self.set_winner()                
                 self.ui.end_game()
@@ -186,13 +198,18 @@ class Game:
                 self.change_turn()
             self.show_info_player()
         else:
-            self.player_chance()
-            #self.ui.show_info("No se puede insertar en esa casilla")
+            self.player_chance()    
+            message = "Pieza no insertada"
+            self.moves.add(Moves(self.n_moves,player_number,column,row, figure, message))
+            self.n_moves += 1
+            #self.ui.show_info("No se puede insertar en esa casilla")        
+        
 
     def add_model(self) -> Figure:
         self.ui.tablero_muestra.clear()
         color = self.turn.data.color
         ran = random.randint(1, Game.CANTIDAD_FIGURAS)
+        self.n_figure = ran
         figure = Game.figures_list.get_node(ran).data
         node = figure.figure
         for i in range(node.rows):

@@ -58,8 +58,13 @@ a:hover{
 }
 
 table{
-    width: 60%;
+    width: 100%;
     margin: 20px 0;
+}
+
+.report{
+    width: 70%;
+    text-align: center;
 }
 
 table, th, td {

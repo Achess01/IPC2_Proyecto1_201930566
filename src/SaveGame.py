@@ -1,4 +1,5 @@
 from xml.etree.ElementTree import ElementTree
+from .structures.LinkedList import LinkedList
 from .structures.SparseMatrix import SparseMatrix
 import xml.etree.cElementTree as ET
 
@@ -115,5 +116,64 @@ def open_game(name_searched):
         return name_game, colorj1,colorj2, rows, columns, board
     except:
         return None,None,None,None,None,None
-    
+
+def new_report(moves: LinkedList, colorj1, colorj2, winner, name):
+    try:
+        text_winner = "Empate"    
+        color_winner = "#000"
+        if winner != None:
+            if winner.number == 1:
+                text_winner ="Ganador J1"
+                color_winner = colorj1
+            else:
+                text_winner = "Ganador J2"
+                color_winner = colorj2
+        new_node = """
+        <div class="report">    
+                <h2> Partida: """+name+"""</h2>
+                <h3 style="color:"""+ colorj1 + """;">J1</h3>
+                <h3 style="color:"""+ colorj2+""";">J2</h3>
+                <h3 style="color: """+color_winner+""";">Resultado :""" +text_winner+"""</h3>
+                <table>                
+                    <tr>
+                        <th colspan="6">MOVIMIENTOS</th>
+                    </tr>
+                    <tr>
+                        <th>No.</th>
+                        <th>Jugador</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Pieza</th>
+                        <th>Status</th>
+                    </tr>
+                    <moves>                
+                </table>
+            </div>
+                <!--n-->
+        """
+        text_moves = """"""
+        for i in range(moves.length):
+            data = moves.get_node(i+1).data
+            text_moves += """
+                <tr>
+                    <td>"""+str(data.n)+"""</td>
+                    <td>J"""+str(data.player_number)+"""</td>
+                    <td>"""+str(data.x)+"""</td>
+                    <td>"""+str(data.y)+"""</td>
+                    <td><img src="./assets/figure"""+str(data.n_figure)+""".png" alt="" height="25px"></td>
+                    <td>"""+data.message+"""</td>
+                </tr>
+            """
+        new_node = new_node.replace("<moves>", text_moves)
+        html = open('index.html', 'r')
+        linea = html.read()    
+        nuevo = linea.replace("<!--n-->", new_node)    
+        html.close()
+        html = open('index.html', 'w')
+        html.write(nuevo)
+        html.close()
+    except ValueError:
+        print(ValueError)
+
+
     
