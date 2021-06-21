@@ -86,6 +86,8 @@ class Game:
         self.actual_figure = self.add_model()
         self.winner = None
         self.draw = False
+        self.amount = True
+        self.valid_move = True
     
     def print_board(self):
         p1 = self.players.get_node(1).data
@@ -150,9 +152,17 @@ class Game:
             self.turn = self.players.get_node(1)                              
         self.actual_figure = self.add_model()        
         if not self.is_playable():
-            self.set_winner()
-            self.ui.end_game()
-         
+            if not self.valid_move:
+                self.set_winner()
+                self.ui.end_game()
+            else:
+                self.valid_move = False
+                n = self.turn.data.number
+                self.ui.show_info("J" + str(n) + " no es posible colocar la pieza")
+                self.change_turn()
+        else:
+            self.valid_move = True
+                     
     def move(self, row, column):
         self.make_move(row, column)        
         #print(self.turn.data.color)
@@ -169,9 +179,12 @@ class Game:
     def make_move(self, row, column):
         if self.board.is_insertable(row, column, self.turn.data.number, self.actual_figure):
             self.add_to_board(column, row)
-            self.discount_piece()
+            if self.discount_piece() == 0:
+                self.set_winner()                
+                self.ui.end_game()
+            else:                
+                self.change_turn()
             self.show_info_player()
-            self.change_turn()
         else:
             self.player_chance()
             #self.ui.show_info("No se puede insertar en esa casilla")
