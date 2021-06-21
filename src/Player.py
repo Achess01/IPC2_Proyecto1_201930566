@@ -6,10 +6,7 @@ class Player:
         self.n_pieces = n_pieces
         self.chance = 2
         self.points = 0
-    
-    def calc_points(self):
-        pass
-    
+            
     def add_point(self):
         self.points += 1
         

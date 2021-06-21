@@ -68,19 +68,46 @@ class Game:
     figure6.figure.insert(1,4,1)
     figures_list.add(figure6)
 
-    def __init__(self,rows, columns, color_code1, color_name1, color_code2, color_name2, n_pieces, ui, name):
+    def __init__(self,rows, columns, color_code1, color_name1, color_code2, color_name2, n_pieces, ui, name, board : SparseMatrix = None):
         self.name = name
         self.ui = ui
         self.players = LinkedList()
         self.players.add(Player(1,color_code1, n_pieces, color_name1))
-        self.players.add(Player(2,color_code2, n_pieces, color_name2))
+        self.players.add(Player(2,color_code2, n_pieces, color_name2))        
+        if board == None:
+            self.board = SparseMatrix()
+        else:
+            self.board = board
+            self.print_board()
+            #funcion para contar puntos a jugadores
         self.show_info_player()
-        self.board = SparseMatrix()
         self.board.set_max(rows, columns)
         self.initial_turn()
         self.actual_figure = self.add_model()
         self.winner = None
         self.draw = False
+    
+    def print_board(self):
+        p1 = self.players.get_node(1).data
+        p2 = self.players.get_node(2).data
+        colorj1 = p1.color
+        colorj2 = p2.color
+        color = ""
+        aux = self.board.root
+        aux = aux.get_down()
+        while aux != None:
+            aux2 = aux.get_right()
+            while aux2 != None:          
+                player_number = aux2.square.player_number
+                if player_number == 1:
+                    color = colorj1
+                    p1.add_point()
+                else: 
+                    p2.add_point()
+                    color = colorj2
+                self.ui.add_square(aux2.y - 1, aux2.x - 1, player_number, color)
+                aux2 = aux2.get_right()
+            aux = aux.get_down()
 
     def player_chance(self):
         n = self.turn.data.minus_chance()
@@ -120,8 +147,8 @@ class Game:
         self.turn.data.chance = 2
         self.turn = self.turn.get_next()
         if self.turn == None:
-            self.turn = self.players.get_node(1)
-        self.actual_figure = self.add_model()
+            self.turn = self.players.get_node(1)                              
+        self.actual_figure = self.add_model()        
         if not self.is_playable():
             self.set_winner()
             self.ui.end_game()

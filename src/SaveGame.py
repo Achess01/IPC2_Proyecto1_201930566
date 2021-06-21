@@ -21,9 +21,7 @@ def find_game(name, games: ElementTree = None):
         except:
             return None
     return games.find("./matriz/[nombre='"+ name + "']")
-
     
-
 def save_game(name, board : SparseMatrix, color1, color2):
     try:
         try: 
@@ -67,3 +65,55 @@ def save_game(name, board : SparseMatrix, color1, color2):
     def load_game():
         pass
 
+def find_games():
+    try:
+        games = ET.parse('games.xml')
+        names = games.findall("./matriz/[nombre]")
+        text_n = []
+        text = ""
+        i = 1
+        for m in names:
+            text_n.append(m[0].text)
+            text += str(i) + ". " + m[0].text + "\n"            
+            i += 1
+        return text, text_n
+    except:
+        return ""
+
+def open_game(name_searched):
+    try:                
+        games = ET.parse('games.xml')
+        name = find_game(name_searched, games)
+        # 0 nombre, 1 color1
+        # 2 color2, 3 filas
+        # 4 columnas, 5 texto 
+        name_game = name[0].text.replace(" ", "")
+        colorj1 = name[1].text.replace(" ", "")
+        colorj2 = name[2].text.replace(" ", "")
+        rows = int(name[3].text)
+        columns = int(name[4].text)
+        text = name[5].text.replace(" ", "").split("\n")   
+        text.remove("")
+        board = SparseMatrix()        
+        if rows != len(text):
+            return None,None,None,None,None,None                
+
+        for i in range(len(text)):            
+            if len(text[i]) != columns:                
+                return None,None,None,None,None,None
+            for j in range(len(text[i])):                                
+                
+                if text[i][j] != "-":    
+                    number = 1
+                    if text[i][j] == "2":
+                        number = 2
+                    elif text[i][j] == "1":
+                        number = 1
+                    else:
+                        return None,None,None,None,None,None
+                    board.insert(j+1, i+1, number)
+        return name_game, colorj1,colorj2, rows, columns, board
+    except:
+        return None,None,None,None,None,None
+    
+    

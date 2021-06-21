@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from ..Game import Game
 from ..structures.LinkedList import LinkedList
-from ..SaveGame import save_game, find_game
+from ..SaveGame import save_game, find_game, open_game, find_games
 from .Color import Color
 
 
@@ -24,8 +24,7 @@ class Ui_MainWindow(object):
     colors.add(Color("Amarillo", "#FFE800"))
     colors.add(Color("Verde", "#0F0"))
     playing = False    
-    
-    
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1000, 600)
@@ -188,12 +187,16 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menuBar)
         self.actionEjemplos = QtWidgets.QAction(MainWindow)
         self.actionEjemplos.setObjectName("actionEjemplos")
+        self.actionNueva_partida = QtWidgets.QAction(MainWindow)
+        self.actionNueva_partida.setObjectName("actionNueva_partida")
+        self.actionNueva_partida.setText("Nueva partida")
         self.actionAbrir_partida = QtWidgets.QAction(MainWindow)
         self.actionAbrir_partida.setObjectName("actionAbrir_partida")
         self.actionGuardar_partida = QtWidgets.QAction(MainWindow)
         self.actionGuardar_partida.setObjectName("actionGuardar_partida")
         self.actionAyuda = QtWidgets.QAction(MainWindow)
         self.actionAyuda.setObjectName("actionAyuda")
+        self.menuJuego.addAction(self.actionNueva_partida)
         self.menuJuego.addAction(self.actionAbrir_partida)
         self.menuJuego.addAction(self.actionGuardar_partida)
         self.menuJuego.addAction(self.actionAyuda)
@@ -341,11 +344,34 @@ class Ui_MainWindow(object):
             color2 = self.game.players.get_node(2).data.color_name
             validate = save_game(name, board, color1, color2)
             if(validate):
-                self.show_info("Partida guardada como " + name, "Completado")
+                self.show_info("Partida guardada como '" + name+ "'", " Completado")
             else:
                 self.show_info("Error al guardar")
 
-    def end_game(self):        
+    def open_game(self):
+        text, names = find_games()
+        if len(names) > 0:
+            num, ok = QtWidgets.QInputDialog.getInt(self.centralwidget,'Partidas cargadas', text + "\nEscriba el número de la partida que desea cargar",0, 1, 999)
+            if ok and num > 0 and num <= len(names):
+                name, color_name1, color_name2, rows, columns, board  = open_game(names[num - 1])
+                colorj1 = self.get_color(color_name1)
+                colorj2 = self.get_color(color_name2)
+                if name != None:
+                    self.rows = rows
+                    self.columns = columns
+                    self.grid_game_board(self.rows, self.columns) 
+                    self.puntos_j1.setStyleSheet("QLabel {color :"+ colorj1+ "; }");
+                    self.puntos_j2.setStyleSheet("QLabel {color :"+ colorj2+ "; }");
+                    self.game = Game(self.rows, self.columns, colorj1, color_name1, colorj2, color_name2, 1000, self, name, board)                                       
+                    Ui_MainWindow.playing = True
+                    self.config_juego.setEnabled(False)
+                    self.controles_juego.setEnabled(True)
+                else:
+                    self.show_info("No se puedo cargar la partida")
+        else:
+            self.show_info("Es posible que no se haya guardado ninguna partida")
+                            
+    def end_game(self, ):        
         if not self.game.draw:            
             n = self.game.winner.number
             self.show_info("El ganador es J" + str(n), "FELICIDADES")
@@ -366,21 +392,42 @@ class Ui_MainWindow(object):
     def end_turn(self):
         self.game.change_turn()
 
+    def clear_game(self):
+        if self.playing:
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setIcon(QtWidgets.QMessageBox.Information)
+            msgBox.setText("Si inicia una nueva partida perderá el progreso no guardado")
+            msgBox.setWindowTitle("Advertencia")
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+            value = msgBox.exec()
+            if value == QtWidgets.QMessageBox.Ok:
+                self.game = None
+                self.tablero_juego.clear()                
+                self.tablero_muestra.clear()
+                self.tablero_juego.setRowCount(0)
+                self.tablero_juego.setColumnCount(0)
+                self.tablero_muestra.setColumnCount(0)
+                self.tablero_muestra.setRowCount(0)
+                self.text_game.clear()
+                self.config_juego.setEnabled(True)                        
+                self.controles_juego.setEnabled(False)
+                self.puntos_j1.setText("")
+                self.puntos_j2.setText("")
+
     def add_actions(self):
         self.button_iniciar.clicked.connect(lambda: self.new_game())
         self.button_colocar.clicked.connect(lambda: self.put_figures())
         self.button_turno.clicked.connect(lambda: self.end_turn())
         self.actionGuardar_partida.triggered.connect(lambda: self.save_game())
+        self.actionAbrir_partida.triggered.connect(lambda: self.open_game())
+        self.actionNueva_partida.triggered.connect(lambda: self.clear_game())
     
     def start(self):  
         self.add_actions()
         self.controles_juego.setEnabled(False)        
+        self.tablero_muestra
         self.game = None                
         #self.grid_espacio_juego(20,20)
         #self.game.add_model(self) # esto va en cuando ya se esté jugando
      
-
-
-
-    
 
