@@ -1,0 +1,8 @@
+digraph {
+	node [shape=box style=filled]
+	{
+		rank=same
+		node [color=lightblue]
+		node00 [label="(0, 0)"]
+	}
+}

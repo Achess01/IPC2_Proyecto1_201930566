@@ -19,10 +19,10 @@ from .Color import Color
 class Ui_MainWindow(object):
 
     colors = LinkedList()
-    colors.add(Color("Azul", "#00F"))
-    colors.add(Color("Rojo", "#F00"))
-    colors.add(Color("Amarillo", "#FFE800"))
-    colors.add(Color("Verde", "#0F0"))
+    colors.add(Color("Azul", "blue"))
+    colors.add(Color("Rojo", "red"))
+    colors.add(Color("Amarillo", "yellow"))
+    colors.add(Color("Verde", "green"))
     playing = False    
         
     def setupUi(self, MainWindow):
@@ -194,14 +194,18 @@ class Ui_MainWindow(object):
         self.actionAbrir_partida.setObjectName("actionAbrir_partida")
         self.actionGuardar_partida = QtWidgets.QAction(MainWindow)
         self.actionGuardar_partida.setObjectName("actionGuardar_partida")
+        self.actionObtener_graph = QtWidgets.QAction(MainWindow)
+        self.actionObtener_graph.setObjectName("actionObtener_graph")
+        self.actionObtener_graph.setText("Obtener gŕafico")
         self.actionAyuda = QtWidgets.QAction(MainWindow)
         self.actionAyuda.setObjectName("actionAyuda")
         self.menuJuego.addAction(self.actionNueva_partida)
         self.menuJuego.addAction(self.actionAbrir_partida)
         self.menuJuego.addAction(self.actionGuardar_partida)
+        self.menuJuego.addAction(self.actionObtener_graph)
         self.menuJuego.addAction(self.actionAyuda)
         self.menuBar.addAction(self.menuJuego.menuAction())
-
+        
         self.text_piezas.setValidator(QtGui.QIntValidator())
         self.text_x.setValidator(QtGui.QIntValidator())
         self.text_x.setMaxLength(3)
@@ -372,7 +376,8 @@ class Ui_MainWindow(object):
         else:
             self.show_info("Es posible que no se haya guardado ninguna partida")
                             
-    def end_game(self, ):        
+    def end_game(self):
+        self.show_graph()
         if not self.game.draw:            
             n = self.game.winner.number
             self.show_info("El ganador es J" + str(n), "FELICIDADES")
@@ -414,6 +419,17 @@ class Ui_MainWindow(object):
                 self.controles_juego.setEnabled(False)
                 self.puntos_j1.setText("")
                 self.puntos_j2.setText("")
+                self.playing = False
+
+    def show_graph(self, show = False):
+        try:
+            if self.playing or not show:
+                color1 = self.game.players.get_node(1).data.color
+                color2 = self.game.players.get_node(2).data.color
+                name = self.game.name
+                self.game.board.show(color1, color2, name, show)
+        except:
+            self.show_info("No se puedo guardar el gráfico")
 
     def add_actions(self):
         self.button_iniciar.clicked.connect(lambda: self.new_game())
@@ -422,6 +438,7 @@ class Ui_MainWindow(object):
         self.actionGuardar_partida.triggered.connect(lambda: self.save_game())
         self.actionAbrir_partida.triggered.connect(lambda: self.open_game())
         self.actionNueva_partida.triggered.connect(lambda: self.clear_game())
+        self.actionObtener_graph.triggered.connect(lambda: self.show_graph(True))
     
     def start(self):  
         self.add_actions()

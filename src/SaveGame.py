@@ -148,6 +148,9 @@ def new_report(moves: LinkedList, colorj1, colorj2, winner, name):
                     </tr>
                     <moves>                
                 </table>
+                <br/>
+                <img src="./assets/"""+name+""".dot.png" alt="" width="500px">
+                <hr/>
             </div>
                 <!--n-->
         """

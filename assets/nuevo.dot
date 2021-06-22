@@ -1,0 +1,195 @@
+digraph {
+	node [shape=box style=filled]
+	{
+		rank=same
+		node [color=lightblue]
+		node00 [label="(0, 0)"]
+		rank=same
+		node [color=lightblue]
+		node10 [label="(1, 0)"]
+		rank=same
+		node [color=lightblue]
+		node20 [label="(2, 0)"]
+		rank=same
+		node [color=lightblue]
+		node30 [label="(3, 0)"]
+		rank=same
+		node [color=lightblue]
+		node40 [label="(4, 0)"]
+		rank=same
+		node [color=lightblue]
+		node50 [label="(5, 0)"]
+		rank=same
+		node [color=lightblue]
+		node60 [label="(6, 0)"]
+		rank=same
+		node [color=lightblue]
+		node70 [label="(7, 0)"]
+		rank=same
+		node [color=lightblue]
+		node80 [label="(8, 0)"]
+		rank=same
+		node [color=lightblue]
+		node90 [label="(9, 0)"]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node01 [label="(0, 1)"]
+		rank=same
+		node [color=yellow]
+		node21 [label=2]
+		rank=same
+		node [color=blue]
+		node31 [label=1]
+		rank=same
+		node [color=yellow]
+		node41 [label=2]
+		rank=same
+		node [color=yellow]
+		node51 [label=2]
+		rank=same
+		node [color=yellow]
+		node81 [label=2]
+		rank=same
+		node [color=yellow]
+		node91 [label=2]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node02 [label="(0, 2)"]
+		rank=same
+		node [color=yellow]
+		node22 [label=2]
+		rank=same
+		node [color=blue]
+		node32 [label=1]
+		rank=same
+		node [color=yellow]
+		node42 [label=2]
+		rank=same
+		node [color=yellow]
+		node52 [label=2]
+		rank=same
+		node [color=blue]
+		node62 [label=1]
+		rank=same
+		node [color=blue]
+		node72 [label=1]
+		rank=same
+		node [color=yellow]
+		node82 [label=2]
+		rank=same
+		node [color=yellow]
+		node92 [label=2]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node03 [label="(0, 3)"]
+		rank=same
+		node [color=yellow]
+		node23 [label=2]
+		rank=same
+		node [color=blue]
+		node33 [label=1]
+		rank=same
+		node [color=blue]
+		node53 [label=1]
+		rank=same
+		node [color=blue]
+		node63 [label=1]
+		rank=same
+		node [color=blue]
+		node73 [label=1]
+		rank=same
+		node [color=blue]
+		node83 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node04 [label="(0, 4)"]
+		rank=same
+		node [color=yellow]
+		node14 [label=2]
+		rank=same
+		node [color=yellow]
+		node24 [label=2]
+		rank=same
+		node [color=blue]
+		node34 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node05 [label="(0, 5)"]
+		rank=same
+		node [color=blue]
+		node25 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node06 [label="(0, 6)"]
+		rank=same
+		node [color=blue]
+		node26 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node07 [label="(0, 7)"]
+		rank=same
+		node [color=blue]
+		node27 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node08 [label="(0, 8)"]
+		rank=same
+		node [color=blue]
+		node18 [label=1]
+		rank=same
+		node [color=blue]
+		node28 [label=1]
+	}
+	node00 -> node01 [dir=both]
+	node01 -> node02 [dir=both]
+	node02 -> node03 [dir=both]
+	node03 -> node04 [dir=both]
+	node04 -> node05 [dir=both]
+	node05 -> node06 [dir=both]
+	node06 -> node07 [dir=both]
+	node07 -> node08 [dir=both]
+	node10 -> node14 [dir=both]
+	node14 -> node18 [dir=both]
+	node20 -> node21 [dir=both]
+	node21 -> node22 [dir=both]
+	node22 -> node23 [dir=both]
+	node23 -> node24 [dir=both]
+	node24 -> node25 [dir=both]
+	node25 -> node26 [dir=both]
+	node26 -> node27 [dir=both]
+	node27 -> node28 [dir=both]
+	node30 -> node31 [dir=both]
+	node31 -> node32 [dir=both]
+	node32 -> node33 [dir=both]
+	node33 -> node34 [dir=both]
+	node40 -> node41 [dir=both]
+	node41 -> node42 [dir=both]
+	node50 -> node51 [dir=both]
+	node51 -> node52 [dir=both]
+	node52 -> node53 [dir=both]
+	node60 -> node62 [dir=both]
+	node62 -> node63 [dir=both]
+	node70 -> node72 [dir=both]
+	node72 -> node73 [dir=both]
+	node80 -> node81 [dir=both]
+	node81 -> node82 [dir=both]
+	node82 -> node83 [dir=both]
+	node90 -> node91 [dir=both]
+	node91 -> node92 [dir=both]
+}

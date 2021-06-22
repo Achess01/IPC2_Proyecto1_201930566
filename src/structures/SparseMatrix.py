@@ -1,5 +1,6 @@
 from src.Square import Square
 from src.structures.MatrixNode import MatrixNode
+from graphviz import Digraph
 
 
 class SparseMatrix:
@@ -147,7 +148,7 @@ class SparseMatrix:
                 pass
         
         # En fila
-        row = rowHead.get_right()
+        row = columnHead.get_down()
         if row == None:
             columnHead.set_down(newNode)
             newNode.set_up(columnHead)
@@ -224,7 +225,52 @@ class SparseMatrix:
                 aux = aux.get_down()        
         return True
 
+    def show(self, colorj1, colorj2, name, show):
+        dot = Digraph(format='png', filename='assets/' + name + '.dot',
+        node_attr={'style': 'filled', 'shape': 'box'})                     
+        aux = self.root                
+        # Creando nodos
+        while aux != None:   
+            aux2 = aux
+            with dot.subgraph() as s:                
+                while aux2 != None:                
+                    n = aux2.square.player_number
+                    text = str(n)             
+                    color = "white"
+                    x= str(aux2.x)
+                    y= str(aux2.y)    
+                    if n == 1:
+                        color = colorj1
+                    elif n == 2:
+                        color = colorj2
+                    else:
+                        color = 'lightblue'
+                        text = "(" + x+ ", " + y+")"
+                                       
+                    s.attr(rank='same')
+                    s.attr('node', color=color)                    
+                    s.node('node'+x+y, text)                     
+                    aux2 = aux2.get_right()
+                aux = aux.get_down() 
+        #Creando enlaces
+        aux = self.root                        
+        while aux != None:
+            aux2 = aux
+            while aux2 != None:             
+                x = aux2.x
+                y = aux2.y                                                               
+                if aux2.get_down() != None:
+                    aux3 = aux2.get_down()
+                    y2 = aux3.y
+                    dot.edge('node'+str(x)+str(y), 'node'+str(x)+str(y2), dir="both")                    
+                aux2 = aux2.get_down()   
+            aux = aux.get_right()   
+        if show:
+            dot.view()
+        else: 
+            dot.render()
 
+        
                 
 
 
