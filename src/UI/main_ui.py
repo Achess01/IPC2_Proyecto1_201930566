@@ -317,7 +317,7 @@ class Ui_MainWindow(object):
                 self.puntos_j1.setStyleSheet("QLabel {color :"+ color_code1+ "; }");
                 self.puntos_j2.setStyleSheet("QLabel {color :"+ color_code2+ "; }");
                 self.grid_game_board(self.rows, self.columns)
-                self.game = Game(self.rows, self.columns, color_code1, color_j1, color_code2, color_j2, n_pieces, self, name)
+                self.game = Game(self.rows, self.columns, color_code1, color_j1, color_code2, color_j2, n_pieces, self, name, time)
                 Ui_MainWindow.playing = True
                 self.config_juego.setEnabled(False)
                 self.controles_juego.setEnabled(True)
@@ -361,12 +361,15 @@ class Ui_MainWindow(object):
                 colorj1 = self.get_color(color_name1)
                 colorj2 = self.get_color(color_name2)
                 if name != None:
+                    if self.game != None:            
+                        self.game.end_now = True            
+                        self.game.turn_changed = True
                     self.rows = rows
                     self.columns = columns
                     self.grid_game_board(self.rows, self.columns) 
                     self.puntos_j1.setStyleSheet("QLabel {color :"+ colorj1+ "; }");
                     self.puntos_j2.setStyleSheet("QLabel {color :"+ colorj2+ "; }");
-                    self.game = Game(self.rows, self.columns, colorj1, color_name1, colorj2, color_name2, 1000, self, name, board)                                       
+                    self.game = Game(self.rows, self.columns, colorj1, color_name1, colorj2, color_name2, 1000, self, name, 60,board)
                     Ui_MainWindow.playing = True
                     self.config_juego.setEnabled(False)
                     self.controles_juego.setEnabled(True)
@@ -396,7 +399,7 @@ class Ui_MainWindow(object):
         self.config_juego.setEnabled(True)
 
     def end_turn(self):
-        self.game.change_turn()
+        self.game.turn_changed = True
 
     def clear_game(self):
         if self.playing:
@@ -407,6 +410,8 @@ class Ui_MainWindow(object):
             msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
             value = msgBox.exec()
             if value == QtWidgets.QMessageBox.Ok:
+                self.game.turn_changed = True
+                self.game.end_now = True
                 self.game = None
                 self.tablero_juego.clear()                
                 self.tablero_muestra.clear()

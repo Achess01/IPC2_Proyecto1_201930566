@@ -6,6 +6,8 @@ from .Figure import Figure
 from .Moves import Moves
 import random
 from .SaveGame import new_report
+import threading
+import time
 
 
 class Game:
@@ -69,8 +71,9 @@ class Game:
     figure6.figure.insert(1,3,1)
     figure6.figure.insert(1,4,1)
     figures_list.add(figure6)
+    
 
-    def __init__(self,rows, columns, color_code1, color_name1, color_code2, color_name2, n_pieces, ui, name, board : SparseMatrix = None):
+    def __init__(self,rows, columns, color_code1, color_name1, color_code2, color_name2, n_pieces, ui, name, max_time,  board : SparseMatrix = None):
         self.name = name
         self.ui = ui
         self.players = LinkedList()
@@ -93,6 +96,26 @@ class Game:
         self.draw = False
         self.amount = True
         self.valid_move = True
+        self.max_time = max_time
+        self.turn_changed = False
+        self.end_now = False 
+        self.contador = self.max_time
+        self.t1 = threading.Thread(target=self.timer)
+        self.t1.start()       
+        
+
+    def timer(self):        
+        self.contador = self.max_time
+        self.turn_changed = False
+        while self.contador > 0:         
+            if self.turn_changed:
+                break
+            self.ui.lcdNumber.display(self.contador)
+            self.contador -= 1
+            time.sleep(1)   
+        if not self.end_now:
+            self.change_turn()                        
+        print("cambio de turno")
     
     def print_board(self):
         p1 = self.players.get_node(1).data
@@ -120,7 +143,8 @@ class Game:
         n = self.turn.data.minus_chance()
         self.ui.show_info("Casilla inválida\nOportunidades restantes: " + str(n))
         if n < 1:
-            self.change_turn()
+            # self.change_turn()
+            self.turn_changed = True
 
     def initial_turn(self):
         ran = random.randint(1,2)
@@ -128,6 +152,8 @@ class Game:
 
     def set_winner(self):
         #j1
+        self.end_now = True
+        self.turn_changed = True
         j1 = self.players.get_node(1).data
         #j2
         j2 = self.players.get_node(2).data
@@ -137,7 +163,7 @@ class Game:
             self.winner = j2
         else:
             self.draw = True
-        new_report(self.moves,j1.color, j2.color, self.winner, self.name)
+        new_report(self.moves,j1.color, j2.color, self.winner, self.name)        
 
     def is_playable(self):
         rows = self.board.max_rows
@@ -165,9 +191,14 @@ class Game:
                 self.valid_move = False
                 n = self.turn.data.number
                 self.ui.show_info("J" + str(n) + " no es posible colocar la pieza")
+                self.contador = 0
                 self.change_turn()
+                # self.turn_changed = True
         else:
             self.valid_move = True
+            self.turn_changed = True
+            self.t1 = threading.Thread(target=self.timer)
+            self.t1.start()
                      
     def move(self, row, column):
         self.make_move(row, column)        
@@ -195,7 +226,8 @@ class Game:
                 self.set_winner()                
                 self.ui.end_game()
             else:                
-                self.change_turn()
+                # self.change_turn()
+                self.turn_changed = True
             self.show_info_player()
         else:
             self.player_chance()    
