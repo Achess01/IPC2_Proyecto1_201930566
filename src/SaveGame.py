@@ -79,7 +79,7 @@ def find_games():
             i += 1
         return text, text_n
     except:
-        return ""
+        return "", ""
 
 def open_game(name_searched):
     try:                

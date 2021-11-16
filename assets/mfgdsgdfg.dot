@@ -1,0 +1,166 @@
+digraph {
+	node [shape=box style=filled]
+	{
+		rank=same
+		node [color=lightblue]
+		node00 [label="(0, 0)"]
+		rank=same
+		node [color=lightblue]
+		node10 [label="(1, 0)"]
+		rank=same
+		node [color=lightblue]
+		node20 [label="(2, 0)"]
+		rank=same
+		node [color=lightblue]
+		node30 [label="(3, 0)"]
+		rank=same
+		node [color=lightblue]
+		node40 [label="(4, 0)"]
+		rank=same
+		node [color=lightblue]
+		node50 [label="(5, 0)"]
+		rank=same
+		node [color=lightblue]
+		node60 [label="(6, 0)"]
+		rank=same
+		node [color=lightblue]
+		node70 [label="(7, 0)"]
+		rank=same
+		node [color=lightblue]
+		node80 [label="(8, 0)"]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node01 [label="(0, 1)"]
+		rank=same
+		node [color=blue]
+		node41 [label=1]
+		rank=same
+		node [color=blue]
+		node51 [label=1]
+		rank=same
+		node [color=blue]
+		node61 [label=1]
+		rank=same
+		node [color=blue]
+		node71 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node02 [label="(0, 2)"]
+		rank=same
+		node [color=red]
+		node22 [label=2]
+		rank=same
+		node [color=red]
+		node32 [label=2]
+		rank=same
+		node [color=red]
+		node42 [label=2]
+		rank=same
+		node [color=red]
+		node52 [label=2]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node04 [label="(0, 4)"]
+		rank=same
+		node [color=red]
+		node44 [label=2]
+		rank=same
+		node [color=red]
+		node54 [label=2]
+		rank=same
+		node [color=red]
+		node64 [label=2]
+		rank=same
+		node [color=red]
+		node74 [label=2]
+		rank=same
+		node [color=blue]
+		node84 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node05 [label="(0, 5)"]
+		rank=same
+		node [color=blue]
+		node85 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node06 [label="(0, 6)"]
+		rank=same
+		node [color=blue]
+		node86 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node07 [label="(0, 7)"]
+		rank=same
+		node [color=red]
+		node27 [label=2]
+		rank=same
+		node [color=red]
+		node37 [label=2]
+		rank=same
+		node [color=blue]
+		node77 [label=1]
+		rank=same
+		node [color=blue]
+		node87 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node08 [label="(0, 8)"]
+		rank=same
+		node [color=red]
+		node18 [label=2]
+		rank=same
+		node [color=red]
+		node28 [label=2]
+		rank=same
+		node [color=red]
+		node38 [label=2]
+		rank=same
+		node [color=red]
+		node48 [label=2]
+	}
+	node00 -> node01 [dir=both]
+	node01 -> node02 [dir=both]
+	node02 -> node04 [dir=both]
+	node04 -> node05 [dir=both]
+	node05 -> node06 [dir=both]
+	node06 -> node07 [dir=both]
+	node07 -> node08 [dir=both]
+	node10 -> node18 [dir=both]
+	node20 -> node22 [dir=both]
+	node22 -> node27 [dir=both]
+	node27 -> node28 [dir=both]
+	node30 -> node32 [dir=both]
+	node32 -> node37 [dir=both]
+	node37 -> node38 [dir=both]
+	node40 -> node41 [dir=both]
+	node41 -> node42 [dir=both]
+	node42 -> node44 [dir=both]
+	node44 -> node48 [dir=both]
+	node50 -> node51 [dir=both]
+	node51 -> node52 [dir=both]
+	node52 -> node54 [dir=both]
+	node60 -> node61 [dir=both]
+	node61 -> node64 [dir=both]
+	node70 -> node71 [dir=both]
+	node71 -> node74 [dir=both]
+	node74 -> node77 [dir=both]
+	node80 -> node84 [dir=both]
+	node84 -> node85 [dir=both]
+	node85 -> node86 [dir=both]
+	node86 -> node87 [dir=both]
+}

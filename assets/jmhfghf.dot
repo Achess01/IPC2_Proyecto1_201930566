@@ -1,0 +1,78 @@
+digraph {
+	node [shape=box style=filled]
+	{
+		rank=same
+		node [color=lightblue]
+		node00 [label="(0, 0)"]
+		rank=same
+		node [color=lightblue]
+		node10 [label="(1, 0)"]
+		rank=same
+		node [color=lightblue]
+		node20 [label="(2, 0)"]
+		rank=same
+		node [color=lightblue]
+		node30 [label="(3, 0)"]
+		rank=same
+		node [color=lightblue]
+		node40 [label="(4, 0)"]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node01 [label="(0, 1)"]
+		rank=same
+		node [color=red]
+		node21 [label=2]
+		rank=same
+		node [color=red]
+		node31 [label=2]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node02 [label="(0, 2)"]
+		rank=same
+		node [color=red]
+		node12 [label=2]
+		rank=same
+		node [color=red]
+		node22 [label=2]
+		rank=same
+		node [color=red]
+		node32 [label=2]
+		rank=same
+		node [color=red]
+		node42 [label=2]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node03 [label="(0, 3)"]
+		rank=same
+		node [color=blue]
+		node13 [label=1]
+		rank=same
+		node [color=blue]
+		node23 [label=1]
+		rank=same
+		node [color=blue]
+		node33 [label=1]
+		rank=same
+		node [color=blue]
+		node43 [label=1]
+	}
+	node00 -> node01 [dir=both]
+	node01 -> node02 [dir=both]
+	node02 -> node03 [dir=both]
+	node10 -> node12 [dir=both]
+	node12 -> node13 [dir=both]
+	node20 -> node21 [dir=both]
+	node21 -> node22 [dir=both]
+	node22 -> node23 [dir=both]
+	node30 -> node31 [dir=both]
+	node31 -> node32 [dir=both]
+	node32 -> node33 [dir=both]
+	node40 -> node42 [dir=both]
+	node42 -> node43 [dir=both]
+}

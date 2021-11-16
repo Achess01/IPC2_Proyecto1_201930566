@@ -184,16 +184,16 @@ class Game:
             self.turn = self.players.get_node(1)                              
         self.actual_figure = self.add_model()        
         if not self.is_playable():
-            if not self.valid_move:
-                self.set_winner()
-                self.ui.end_game()
-            else:
-                self.valid_move = False
-                n = self.turn.data.number
-                self.ui.show_info("J" + str(n) + " no es posible colocar la pieza")
-                self.contador = 0
-                self.change_turn()
-                # self.turn_changed = True
+            # if not self.valid_move:
+            self.set_winner()
+            self.ui.end_game()
+            # else:
+            #     self.valid_move = False
+            #     n = self.turn.data.number
+            #     self.ui.show_info("J" + str(n) + " no es posible colocar la pieza")
+            #     self.contador = 0
+            #     self.change_turn()
+            #     # self.turn_changed = True
         else:
             self.valid_move = True
             self.turn_changed = True

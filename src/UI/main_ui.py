@@ -319,6 +319,7 @@ class Ui_MainWindow(object):
                 self.grid_game_board(self.rows, self.columns)
                 self.game = Game(self.rows, self.columns, color_code1, color_j1, color_code2, color_j2, n_pieces, self, name, time)
                 Ui_MainWindow.playing = True
+                self.playing = True
                 self.config_juego.setEnabled(False)
                 self.controles_juego.setEnabled(True)
             else:            

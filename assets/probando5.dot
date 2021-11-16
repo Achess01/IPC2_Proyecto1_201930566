@@ -1,0 +1,103 @@
+digraph {
+	node [shape=box style=filled]
+	{
+		rank=same
+		node [color=lightblue]
+		node00 [label="(0, 0)"]
+		rank=same
+		node [color=lightblue]
+		node10 [label="(1, 0)"]
+		rank=same
+		node [color=lightblue]
+		node20 [label="(2, 0)"]
+		rank=same
+		node [color=lightblue]
+		node30 [label="(3, 0)"]
+		rank=same
+		node [color=lightblue]
+		node40 [label="(4, 0)"]
+		rank=same
+		node [color=lightblue]
+		node50 [label="(5, 0)"]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node01 [label="(0, 1)"]
+		rank=same
+		node [color=blue]
+		node11 [label=1]
+		rank=same
+		node [color=red]
+		node21 [label=2]
+		rank=same
+		node [color=blue]
+		node51 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node02 [label="(0, 2)"]
+		rank=same
+		node [color=blue]
+		node12 [label=1]
+		rank=same
+		node [color=red]
+		node22 [label=2]
+		rank=same
+		node [color=blue]
+		node52 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node03 [label="(0, 3)"]
+		rank=same
+		node [color=blue]
+		node13 [label=1]
+		rank=same
+		node [color=red]
+		node23 [label=2]
+		rank=same
+		node [color=blue]
+		node53 [label=1]
+	}
+	{
+		rank=same
+		node [color=lightblue]
+		node04 [label="(0, 4)"]
+		rank=same
+		node [color=blue]
+		node14 [label=1]
+		rank=same
+		node [color=red]
+		node24 [label=2]
+		rank=same
+		node [color=red]
+		node34 [label=2]
+		rank=same
+		node [color=blue]
+		node44 [label=1]
+		rank=same
+		node [color=blue]
+		node54 [label=1]
+	}
+	node00 -> node01 [dir=both]
+	node01 -> node02 [dir=both]
+	node02 -> node03 [dir=both]
+	node03 -> node04 [dir=both]
+	node10 -> node11 [dir=both]
+	node11 -> node12 [dir=both]
+	node12 -> node13 [dir=both]
+	node13 -> node14 [dir=both]
+	node20 -> node21 [dir=both]
+	node21 -> node22 [dir=both]
+	node22 -> node23 [dir=both]
+	node23 -> node24 [dir=both]
+	node30 -> node34 [dir=both]
+	node40 -> node44 [dir=both]
+	node50 -> node51 [dir=both]
+	node51 -> node52 [dir=both]
+	node52 -> node53 [dir=both]
+	node53 -> node54 [dir=both]
+}

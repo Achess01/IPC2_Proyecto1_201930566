@@ -90,7 +90,7 @@ class SparseMatrix:
     def getRow(self, rowNumber, create : bool) -> MatrixNode:
         aux = self.root.get_down()
         while aux != None:
-            if aux.y == rowNumber:
+            if aux. y== rowNumber:
                 return aux
             aux = aux.get_down()
         if create:
